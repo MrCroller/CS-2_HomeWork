@@ -34,6 +34,11 @@ namespace CS_2_HomeWork.Object
         /// <summary>
         /// Абстрактный метод описывающий движение.
         /// </summary>
-        public abstract void Update();
+        public virtual void Update()    // Оставил его виртуальным, т.к. есть общее поведение для Star и Asteroid (пока что)
+        {
+            Pos.X -= Dir.X;
+            Pos.Y = Pos.Y;
+            if (Pos.X < 0) Pos.X = Game.Width;
+        }
     }
 }

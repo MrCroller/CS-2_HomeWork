@@ -47,7 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game.cs" />
+    <Compile Include="Object\Asteroid.cs" />
     <Compile Include="Object\BaseObject.cs" />
+    <Compile Include="Object\Bullet.cs" />
     <Compile Include="Object\Planet.cs" />
     <Compile Include="Object\Star.cs" />
     <Compile Include="Program.cs" />
@@ -55,10 +57,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\earth.png" />
-    <Content Include="Resources\saturn.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

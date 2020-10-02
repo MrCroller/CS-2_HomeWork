@@ -23,15 +23,5 @@ namespace CS_2_HomeWork.Object
             Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X, Pos.Y, Pos.X + Size.Width, Pos.Y + Size.Height);
             Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X + Size.Width, Pos.Y, Pos.X, Pos.Y + Size.Height);
         }
-
-        /// <summary>
-        /// описывает движение объектов
-        /// </summary>
-        public override void Update()
-        {
-            Pos.X += Dir.X;
-            Pos.Y = Pos.Y;
-            if (Pos.X > Game.Width) Pos.X = 0;
-        }
     }
 }

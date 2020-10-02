@@ -19,7 +19,7 @@ namespace CS_2_HomeWork.Object
         /// <summary>
         /// Конструктор для параметров планеты
         /// </summary>
-        /// <param name="str">адрес картинки</param>
+        /// <param name="img">Картинка</param>
         /// <param name="pos">Позиция</param>
         /// <param name="dir">Направление</param>
         /// <param name="size">Размер</param>
