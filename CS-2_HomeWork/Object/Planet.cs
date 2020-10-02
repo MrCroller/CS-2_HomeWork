@@ -7,14 +7,23 @@ using System.Threading.Tasks;
 
 namespace CS_2_HomeWork.Object
 {
+    /// <summary>
+    /// Класс планет
+    /// </summary>
     class Planet : BaseObject
     {
+        /// <summary>
+        /// Свойство для картинки
+        /// </summary>
         public Bitmap img { get; private set; }
 
-        public Planet(Point pos, Point dir, Size size) : base(pos, dir, size)
-        {
-
-        }
+        /// <summary>
+        /// Свойства планет
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="dir"></param>
+        /// <param name="size"></param>
+        public Planet(Point pos, Point dir, Size size) : base(pos, dir, size) { }
 
         /// <summary>
         /// Конструктор для параметров планеты
@@ -28,12 +37,17 @@ namespace CS_2_HomeWork.Object
             this.img = img;
         }
 
-
+        /// <summary>
+        /// Отрисовка планет
+        /// </summary>
         public override void Draw()
         {
             Game.Buffer.Graphics.DrawImage(img, Pos.X, Pos.Y, Size.Width, Size.Height);
         }
 
+        /// <summary>
+        /// Движение планет (статично)
+        /// </summary>
         public override void Update()
         {
             Pos.X = Pos.X;

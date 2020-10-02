@@ -7,17 +7,22 @@ using System.Threading.Tasks;
 
 namespace CS_2_HomeWork.Object
 {
+    /// <summary>
+    /// Класс звезд
+    /// </summary>
     class Star : BaseObject
     {
         /// <summary>
-        /// Параметры объекта Star
+        /// Параметры звезд
         /// </summary>
         /// <param name="pos">Позиция</param>
         /// <param name="dir">Направление</param>
         /// <param name="size">Размер</param>
-        public Star(Point pos, Point dir, Size size) : base(pos, dir, size)
-        {
-        }
+        public Star(Point pos, Point dir, Size size) : base(pos, dir, size) { }
+
+        /// <summary>
+        /// Отрисовка звезд
+        /// </summary>
         public override void Draw()
         {
             Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X, Pos.Y, Pos.X + Size.Width, Pos.Y + Size.Height);

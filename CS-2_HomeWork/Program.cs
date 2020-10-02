@@ -13,8 +13,8 @@ namespace CS_2_HomeWork
         static void Main(string[] args)
         {
             Form form = new Form();
-            form.Width = 1000;
-            form.Height = 800;
+            Game.Width = 1000;
+            Game.Height = 800;
             Game.Init(form);
             Game.Draw();
             Application.Run(form);

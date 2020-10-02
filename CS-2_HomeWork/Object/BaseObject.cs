@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using CS_2_HomeWork.Physics;
 
 namespace CS_2_HomeWork.Object
 {
-    abstract class BaseObject
+    abstract class BaseObject : ICollision
     {
         protected Point Pos;
         protected Point Dir;
@@ -19,8 +20,11 @@ namespace CS_2_HomeWork.Object
         /// <param name="pos">Позиция</param>
         /// <param name="dir">Направление</param>
         /// <param name="size">Размер</param>
-        protected BaseObject(Point pos, Point dir, Size size)
+        public BaseObject(Point pos, Point dir, Size size)
         {
+            if(size.Width < 0 || size.Height < 0) throw new GameObjectException(this.GetType().ToString() + "\nРазмер элемента не может быть меньше 0");
+            if(dir.X > 30 || dir.Y > 30) throw new GameObjectException(this.GetType().ToString() + "\nНедопустимая скорость");
+
             Pos = pos;
             Dir = dir;
             Size = size;
@@ -32,7 +36,7 @@ namespace CS_2_HomeWork.Object
         public abstract void Draw();
 
         /// <summary>
-        /// Абстрактный метод описывающий движение.
+        /// Виртуальный метод описывающий движение.
         /// </summary>
         public virtual void Update()    // Оставил его виртуальным, т.к. есть общее поведение для Star и Asteroid (пока что)
         {
@@ -40,5 +44,9 @@ namespace CS_2_HomeWork.Object
             Pos.Y = Pos.Y;
             if (Pos.X < 0) Pos.X = Game.Width;
         }
+
+        public bool Collision(ICollision o) => o.Rect.IntersectsWith(this.Rect);
+
+        public Rectangle Rect => new Rectangle(Pos, Size);
     }
 }

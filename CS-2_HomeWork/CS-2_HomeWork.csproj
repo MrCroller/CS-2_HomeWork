@@ -50,8 +50,10 @@
     <Compile Include="Object\Asteroid.cs" />
     <Compile Include="Object\BaseObject.cs" />
     <Compile Include="Object\Bullet.cs" />
+    <Compile Include="Object\GameObjectException.cs" />
     <Compile Include="Object\Planet.cs" />
     <Compile Include="Object\Star.cs" />
+    <Compile Include="Physics\ICollision.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

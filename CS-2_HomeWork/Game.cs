@@ -15,9 +15,41 @@ namespace CS_2_HomeWork
         private static BufferedGraphicsContext _context;
         public static BufferedGraphics Buffer;
 
-        // Ширина и высота игрового поля
-        public static int Width { get; set; }
-        public static int Height { get; set; }
+        /// <summary>
+        /// Установка ширины игрового поля
+        /// </summary>
+        public static int Width
+        {
+            get => width;
+            set
+            {
+                if (value > 1001 || value < 0) throw new ArgumentOutOfRangeException("Недопустимая ширина игрового поля");
+                width = value;
+            }
+        }
+
+        /// <summary>
+        /// Ширина игрового поля
+        /// </summary>
+        private static int width;
+
+        /// <summary>
+        /// Установка высоты игрового поля
+        /// </summary>
+        public static int Height 
+        {
+            get => height;
+            set
+            {
+                if (value > 1001 || value < 0) throw new ArgumentOutOfRangeException("Недопустимая высота игрового поля");
+                height = value;
+            } 
+        }
+
+        /// <summary>
+        /// Выоста игрового поля
+        /// </summary>
+        private static int height;
 
         static Game()
         {
@@ -38,8 +70,8 @@ namespace CS_2_HomeWork
 
             // Создание объекта, связывание его с формой
             // Сохранение размера формы
-            Width = form.ClientSize.Width;
-            Height = form.ClientSize.Height;
+            form.Width = width;
+            form.Height = height;
 
             // Связывание буфера в памяти с графическим объектом, чтобы рисовать в буфере
             Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
@@ -75,33 +107,33 @@ namespace CS_2_HomeWork
             asteroids = new List<Asteroid>();
             Random rnd = new Random();
 
-            // Создание фона
+            // Создание фонового рисунка
             Bitmap img_background = new Bitmap("Resources/background.png"); // Да... это не красиво. Как сделать лучше?
             objs.Add(new Planet(img_background, new Point(0,0), new Point(0), new Size(Width, Height)));
 
-            //Создание пуль
-            bullet = new Bullet(new Point(0, 200), new Point(5, 0), new Size(4, 1));
-
-            //Создание астероидов
-            for(int i = 0; i < 30; i++)
-            {
-                int r = rnd.Next(5, 50);
-                asteroids.Add(new Asteroid(new Point(1000, rnd.Next(0, Game.Height)), new Point(r / 5), new Size(r, r)));
-            }
-
-            //Создание звёзд
-            for (int i = 1; i < 40; i++)    // Звезды побольше
+            // Создание звёзд
+            for (int i = 1; i < 40; i++)    // Звезды побольше (ближние)
                 objs.Add(new Star(new Point(rnd.Next(1, Width), rnd.Next(1, Height)), new Point(3), new Size(3, 3)));
             for (int i = 1; i < 200; i++)   // Средние
                 objs.Add(new Star(new Point(rnd.Next(1, Width), rnd.Next(1, Height)), new Point(2), new Size(2, 2)));
             for (int i = 1; i < 600; i++)   // Маленькие (дальние)
                 objs.Add(new Star(new Point(rnd.Next(1, Width), rnd.Next(1, Height)), new Point(1), new Size(1, 1)));
 
-            //Создание планет
+            // Создание пуль
+            bullet = new Bullet(new Point(0, 200), new Point(5, 0), new Size(4, 1));
+
+            // Создание астероидов
+            for(int i = 0; i < 30; i++)
+            {
+                int r = rnd.Next(5, 50);
+                asteroids.Add(new Asteroid(new Point(1000, rnd.Next(0, Game.Height)), new Point(r / 5), new Size(r, r)));
+            }
+
+            // Создание планет
             Bitmap img_earth = new Bitmap("Resources/earth.png");
             objs.Add(new Planet(img_earth, new Point(550, 500), new Point(0), new Size(800, 700)));
             Bitmap img_saturn = new Bitmap("Resources/saturn.png");
-            objs.Add(new Planet(img_saturn, new Point(200, 150), new Point(70), new Size(70, 70)));
+            objs.Add(new Planet(img_saturn, new Point(200, 150), new Point(70), new Size(70, -70)));
         }
 
         /// <summary>
@@ -119,6 +151,9 @@ namespace CS_2_HomeWork
             // Астероиды
             foreach (Asteroid ast in asteroids)
                 ast.Draw();
+
+            // Пули
+            bullet.Draw();
 
             Buffer.Render();
         }
@@ -142,7 +177,7 @@ namespace CS_2_HomeWork
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void Timer_Tick(object sender, EventArgs e) //Видимо какое то событие
+        private static void Timer_Tick(object sender, EventArgs e) // Видимо какое то событие
         {
             Draw();
             Update();
