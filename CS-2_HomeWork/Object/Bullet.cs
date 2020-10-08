@@ -33,7 +33,7 @@ namespace CS_2_HomeWork.Object
         /// </summary>
         public override void Update()
         {
-            Pos.X = Pos.X + 3;
+            Pos.X += Dir.X;
         }
     }
 }

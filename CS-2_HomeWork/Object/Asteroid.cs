@@ -20,17 +20,10 @@ namespace CS_2_HomeWork.Object
         /// <param name="pos"></param>
         /// <param name="dir"></param>
         /// <param name="size"></param>
-        public Asteroid(Point pos, Point dir, Size size) : base(pos, dir, size)
+        public Asteroid(Bitmap img, Point pos, Point dir, Size size) : base(img, pos, dir, size)
         {
             Power = 1;
         }
 
-        /// <summary>
-        /// Отрисовка Астероида
-        /// </summary>
-        public override void Draw()
-        {
-            Game.Buffer.Graphics.FillEllipse(Brushes.White, Pos.X, Pos.Y, Size.Width, Size.Height);
-        }
     }
 }

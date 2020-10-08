@@ -12,37 +12,16 @@ namespace CS_2_HomeWork.Object
     /// </summary>
     class Planet : BaseObject
     {
-        /// <summary>
-        /// Свойство для картинки
-        /// </summary>
-        public Bitmap img { get; private set; }
 
         /// <summary>
-        /// Свойства планет
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="dir"></param>
-        /// <param name="size"></param>
-        public Planet(Point pos, Point dir, Size size) : base(pos, dir, size) { }
-
-        /// <summary>
-        /// Конструктор для параметров планеты
+        /// Свойства планеты
         /// </summary>
         /// <param name="img">Картинка</param>
         /// <param name="pos">Позиция</param>
         /// <param name="dir">Направление</param>
         /// <param name="size">Размер</param>
-        public Planet(Bitmap img, Point pos, Point dir, Size size) : base(pos, dir, size)
+        public Planet(Bitmap img, Point pos, Point dir, Size size) : base(img, pos, dir, size)
         {
-            this.img = img;
-        }
-
-        /// <summary>
-        /// Отрисовка планет
-        /// </summary>
-        public override void Draw()
-        {
-            Game.Buffer.Graphics.DrawImage(img, Pos.X, Pos.Y, Size.Width, Size.Height);
         }
 
         /// <summary>

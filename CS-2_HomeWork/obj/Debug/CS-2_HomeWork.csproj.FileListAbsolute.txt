@@ -5,3 +5,14 @@ D:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_Hom
 D:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\bin\Debug\CS-2_HomeWork.pdb
 D:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\obj\Debug\CS-2_HomeWork.exe
 D:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\obj\Debug\CS-2_HomeWork.pdb
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\bin\Debug\CS-2_HomeWork.exe.config
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\bin\Debug\CS-2_HomeWork.exe
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\bin\Debug\CS-2_HomeWork.pdb
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\obj\Debug\CS-2_HomeWork.csprojAssemblyReference.cache
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\obj\Debug\CS-2_HomeWork.csproj.CoreCompileInputs.cache
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\obj\Debug\CS-2_HomeWork.exe
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\obj\Debug\CS-2_HomeWork.pdb
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\obj\Debug\Interop.WMPLib.dll
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\obj\Debug\CS-2_HomeWork.csproj.ResolveComReference.cache
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\bin\Debug\WindowsBase.dll
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\CS-2_HomeWork\obj\Debug\CS-2_HomeWork.csproj.CopyComplete
