@@ -12,6 +12,7 @@ namespace CS_2_HomeWork
     /// </summary>
     /// <param name="msg"></param>
     public delegate void ToLog(string msg);
+
     class Game
     {
         private static Timer timer = new Timer();
@@ -51,14 +52,14 @@ namespace CS_2_HomeWork
         /// <summary>
         /// Установка высоты игрового поля
         /// </summary>
-        public static int Height 
+        public static int Height
         {
             get => height;
             set
             {
                 if (value > 1001 || value < 0) throw new ArgumentOutOfRangeException("Недопустимая высота игрового поля");
                 height = value;
-            } 
+            }
         }
 
         /// <summary>
@@ -71,16 +72,44 @@ namespace CS_2_HomeWork
         }
 
         /// <summary>
-        /// Метод для нажатия клавиш
+        /// Обработчик нажатия клавиш
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void Form_KeyDown(object sender, KeyEventArgs e)
+        private static void GameForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Space) bullets.Add(new Bullet(new Point(ship.Rect.X + 85, ship.Rect.Y + 82), new Point(20, 0), new Size(4, 1)));
-            if (e.KeyCode == Keys.Up) ship.Up();
-            if (e.KeyCode == Keys.Down) ship.Down();
+            if (e.KeyCode == Keys.Up) Game.IsShipUpKeyPress = true;
+            if (e.KeyCode == Keys.Down) Game.IsShipDownKeyPress = true;
+            if (e.KeyCode == Keys.Space) Game.IsShootKeyPress = true;
         }
+
+        /// <summary>
+        /// Обработчик отпускания клавиш
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void GameForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up) Game.IsShipUpKeyPress = false;
+            if (e.KeyCode == Keys.Down) Game.IsShipDownKeyPress = false;
+            if (e.KeyCode == Keys.Space) Game.IsShootKeyPress = false;
+        }
+
+
+        /// <summary>
+        /// Флаг клавиши выстрела
+        /// </summary>
+        public static bool IsShootKeyPress { get; set; } = false;
+
+        /// <summary>
+        /// Флаг клавиши вверх
+        /// </summary>
+        public static bool IsShipUpKeyPress { get; set; } = false;
+
+        /// <summary>
+        /// Флаг клавиши вниз
+        /// </summary>
+        public static bool IsShipDownKeyPress { get; set; } = false;
 
 
         /// <summary>
@@ -91,13 +120,14 @@ namespace CS_2_HomeWork
         {
             Graphics g;
 
-            // Предоставляет доступ к главному буферу гарфического контекста 
+            // Предоставляет доступ к главному буферу гарфического контекста
             // для текущего приложения
             _context = BufferedGraphicsManager.Current;
             g = form.CreateGraphics();
 
             // Обработчики событий
-            form.KeyDown += Form_KeyDown;
+            form.KeyDown += GameForm_KeyDown;
+            form.KeyUp += GameForm_KeyUp;
 
             // Событие конца игры
             Ship.MessageDie += Finish;
@@ -128,14 +158,19 @@ namespace CS_2_HomeWork
         private static List<Asteroid> asteroids;
 
         /// <summary>
+        /// Коллекция аптечек
+        /// </summary>
+        private static List<Kit> kit;
+
+        /// <summary>
         /// Объект пули
         /// </summary>
-        private static List<Bullet> bullets = new List<Bullet> { };
+        public static List<Bullet> bullets;
 
         /// <summary>
         /// Фоновая музыка
         /// </summary>
-        private static MediaPlayer foneM = new MediaPlayer 
+        private static MediaPlayer foneM = new MediaPlayer
         {
         };
 
@@ -175,11 +210,13 @@ namespace CS_2_HomeWork
 
             objs = new List<BaseObject>();
             asteroids = new List<Asteroid>();
+            kit = new List<Kit>();
+            bullets = new List<Bullet>();
             Random rnd = new Random();
 
             // Создание фонового рисунка
             Bitmap img_background = new Bitmap("../../Resources/background.png"); // Да... это не красиво. Как сделать лучше?
-            objs.Add(new Planet(img_background, new Point(0,0), new Point(0), new Size(Width, Height)));
+            objs.Add(new Planet(img_background, new Point(0, 0), new Point(0), new Size(Width, Height)));
 
             // Старт фоновой музыки
             PlayFoneMusic();
@@ -192,20 +229,25 @@ namespace CS_2_HomeWork
             for (int i = 1; i < 600; i++)   // Маленькие (дальние)
                 objs.Add(new Star(new Point(rnd.Next(1, Width), rnd.Next(1, Height)), new Point(1), new Size(1, 1)));
 
-            // Создание пуль
-            bullets.Add(new Bullet(new Point(0, 0), new Point(0,0), new Size(4, 1)));
-
             // Создание корабля
             Bitmap img_ship = new Bitmap("../../Resources/bunny_ship.png");
             ship = new Ship(img_ship, new Point(10, 400), new Point(8, 8), new Size(100, 100));
 
             // Создание астероидов
             Bitmap img_ast = new Bitmap("../../Resources/ceres.png");
-                asteroids.Add(new Asteroid(img_ast, new Point(Game.Width + rnd.Next(-50,50), rnd.Next(0, Game.Height)), new Point(3), new Size(50, 50)));
-                Timer NewAster = new Timer
-                {
-                    Interval = 9
-                };
+            for (int i = 0; i < 100; i++)
+            {
+                int r = rnd.Next(50, 80);
+                asteroids.Add(new Asteroid(img_ast, new Point((Game.Width + (i * rnd.Next(300,500))), rnd.Next(0, Game.Height)), new Point(5), new Size(r, r)));
+            }
+
+            // Создание аптечек
+            Bitmap img_kit = new Bitmap("../../Resources/kit.png");
+            for (int i = 0; i < 50; i++)
+            {
+                kit.Add(new Kit(img_kit, new Point(Game.Width + (i * rnd.Next(800, 1000)), rnd.Next(10, (Game.Height - 10))), new Point(2), new Size(50, 50)));
+            }
+
 
             // Создание планет
             Bitmap img_earth = new Bitmap("../../Resources/earth.png");
@@ -232,11 +274,15 @@ namespace CS_2_HomeWork
                 ast.Draw();
 
             // Пули
-            foreach(Bullet bul in bullets)
+            foreach (Bullet bul in bullets)
                 bul.Draw();
 
             // Корабль
             ship?.Draw();
+
+            //Аптечки
+            foreach (Kit k in kit)
+                k.Draw();
 
             // Энергия корабля
             if (ship != null)
@@ -250,6 +296,7 @@ namespace CS_2_HomeWork
         /// </summary>
         public static void Update()
         {
+
             // Звезды и планеты
             foreach (BaseObject obj in objs)
                 obj.Update();
@@ -262,24 +309,53 @@ namespace CS_2_HomeWork
             foreach (Bullet bul in bullets)
                 bul.Update();
 
+            // Аптечки
+            foreach (Kit k in kit)
+                k.Update();
+
+            // Корабль
+            ship.Update();
+
+            Random rnd = new Random();
             // Ох, господь... что же это
             for (var i = 0; i < asteroids.Count; i++)
             {
-                if (asteroids[i] == null) continue;
-                asteroids[i].Update();
-                if (bullets != null && bullets[i].Collision(asteroids[i]))
+                // Столкновение с пулей
+                for (int j = 0; j < bullets.Count; j++)
                 {
-                    System.Media.SystemSounds.Hand.Play();
-                    asteroids[i] = null;
-                    bullets = null;
-                    continue;
+                    if (bullets[j].Collision(asteroids[i]))
+                    {
+                        System.Media.SystemSounds.Hand.Play();
+                        ship?.EnergyLow(rnd.Next(1, 10));
+                        asteroids.RemoveAt(i);
+                        bullets.RemoveAt(j);
+                        continue;
+                    }
                 }
-                if (!ship.Collision(asteroids[i])) continue;
-                var rnd = new Random();
-                ship?.EnergyLow(rnd.Next(1, 10));
-                System.Media.SystemSounds.Asterisk.Play();
-                if (ship.Energy <= 0) ship?.Die();
+                //Столкновение с кораблем
+                if (ship.Collision(asteroids[i]))
+                {
+                    ship.EnergyLow(20);
+                    System.Media.SystemSounds.Asterisk.Play();
+                }  
             }
+
+            // Столкновение пули с аптечкой
+            if (kit != null && bullets.Count > 0)
+            {
+                for (int i = 0; i < bullets.Count; i++)
+                {
+                    if (bullets[i].Collision(kit[i]))
+                    {
+                        ship.EnergyAdd(20);
+                        bullets.RemoveAt(i);
+                        i--;
+                        kit = null;
+                    }
+                }
+            }
+
+            if (ship.Energy <= 0) ship?.Die();
         }
 
         /// <summary>

@@ -54,6 +54,7 @@
     <Compile Include="Object\Asteroid.cs" />
     <Compile Include="Object\BaseObject.cs" />
     <Compile Include="Object\Bullet.cs" />
+    <Compile Include="Object\Kit.cs" />
     <Compile Include="Object\GameObjectException.cs" />
     <Compile Include="Object\Planet.cs" />
     <Compile Include="Object\Ship.cs" />
@@ -72,6 +73,7 @@
     <Content Include="Resources\background.png" />
     <Content Include="Resources\Ceres.png" />
     <Content Include="Resources\earth.png" />
+    <Content Include="Resources\kit.png" />
     <Content Include="Resources\PigStep.wav" />
     <Content Include="Resources\Sanctuary_Guardian.wav" />
     <Content Include="Resources\saturn.png" />
