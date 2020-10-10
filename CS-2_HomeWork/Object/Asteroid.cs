@@ -12,7 +12,6 @@ namespace CS_2_HomeWork.Object
     /// </summary>
     class Asteroid : BaseObject
     {
-        public int Power { get; set; }
 
         /// <summary>
         /// Параметры Астерода
@@ -22,7 +21,7 @@ namespace CS_2_HomeWork.Object
         /// <param name="size"></param>
         public Asteroid(Bitmap img, Point pos, Point dir, Size size) : base(img, pos, dir, size)
         {
-            Power = 1;
+
         }
 
     }

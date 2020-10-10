@@ -10,7 +10,6 @@ namespace CS_2_HomeWork.Object
 {
     class Ship : BaseObject
     {
-        private int energy = 100;
 
         /// <summary>
         /// Свойства с картинкой
@@ -23,7 +22,20 @@ namespace CS_2_HomeWork.Object
         {
         }
 
-        public static event Message MessageDie;
+        /// <summary>
+        /// Событие конца игры
+        /// </summary>
+        public event Action EventDie
+        {
+            add
+            {
+                Game.Finish();
+            }
+            remove
+            {
+                Program.Start();
+            }
+        }
 
         /// <summary>
         /// Энергия корабля
@@ -46,27 +58,35 @@ namespace CS_2_HomeWork.Object
         /// <param name="n">Ед. энергии</param>
         public void EnergyLow(int n)
         {
-            energy -= n;
+            this.Energy -= n;
             Logger.LogWriter($"Энергия корабля уменьшена на {n} единиц, и равна {this.Energy}");
         }
 
+        /// <summary>
+        /// Метод перемещения вверх
+        /// </summary>
         public void Up()
         {
             if (this.Pos.Y > -80) this.Pos.Y -= this.Dir.Y;
             if (this.Pos.Y <= -80) this.Pos.Y = Game.Height - this.Size.Height;
         }
+
+        /// <summary>
+        /// Метод перемещения вниз
+        /// </summary>
         public void Down()
         {
             if (this.Pos.Y < Game.Height - this.Size.Height) this.Pos.Y += this.Dir.Y;
             if (this.Pos.Y + this.Size.Height >= Game.Height) this.Pos.Y = 0;
         }
+
+        /// <summary>
+        /// Метод стрельбы
+        /// </summary>
         public void Shoot()
         {
             Game.bullets.Add(new Bullet(new Point(this.Rect.X + 85, this.Rect.Y + 82), new Point(20, 0), new Size(4, 1)));
-        }
-        public void Die()
-        {
-            MessageDie?.Invoke();
+            EnergyLow(1);
         }
 
         /// <summary>

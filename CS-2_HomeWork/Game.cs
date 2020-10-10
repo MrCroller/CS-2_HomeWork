@@ -13,6 +13,12 @@ namespace CS_2_HomeWork
     /// <param name="msg"></param>
     public delegate void ToLog(string msg);
 
+    /// <summary>
+    /// Делегат для пуль
+    /// </summary>
+    /// <returns></returns>
+    public delegate bool DelBull();
+
     class Game
     {
         private static Timer timer = new Timer();
@@ -129,9 +135,6 @@ namespace CS_2_HomeWork
             form.KeyDown += GameForm_KeyDown;
             form.KeyUp += GameForm_KeyUp;
 
-            // Событие конца игры
-            Ship.MessageDie += Finish;
-
             // Создание объекта, связывание его с формой
             // Сохранение размера формы
             form.Width = width;
@@ -231,7 +234,7 @@ namespace CS_2_HomeWork
 
             // Создание корабля
             Bitmap img_ship = new Bitmap("../../Resources/bunny_ship.png");
-            ship = new Ship(img_ship, new Point(10, 400), new Point(8, 8), new Size(100, 100));
+            ship = new Ship(img_ship, new Point(10, 400), new Point(10, 10), new Size(100, 100));
 
             // Создание астероидов
             Bitmap img_ast = new Bitmap("../../Resources/ceres.png");
@@ -296,6 +299,9 @@ namespace CS_2_HomeWork
         /// </summary>
         public static void Update()
         {
+            // Энергия корабля
+            if (ship.Energy > 0) Buffer.Graphics.DrawString("Energy:" + ship.Energy, SystemFonts.DefaultFont, System.Drawing.Brushes.White, 0, 0);
+            else Buffer.Graphics.Clear(System.Drawing.Color.Black);
 
             // Звезды и планеты
             foreach (BaseObject obj in objs)
@@ -313,6 +319,12 @@ namespace CS_2_HomeWork
             foreach (Kit k in kit)
                 k.Update();
 
+            // Удаление пуль вылетевших за пределы поля
+            for(int i = 0; i < bullets.Count; i++)
+            {
+                if (bullets[i].DelBull()) bullets.RemoveAt(i);
+            }
+
             // Корабль
             ship.Update();
 
@@ -320,42 +332,47 @@ namespace CS_2_HomeWork
             // Ох, господь... что же это
             for (var i = 0; i < asteroids.Count; i++)
             {
-                // Столкновение с пулей
+                // Столкновение пули с астероидом
                 for (int j = 0; j < bullets.Count; j++)
                 {
                     if (bullets[j].Collision(asteroids[i]))
                     {
-                        System.Media.SystemSounds.Hand.Play();
-                        ship?.EnergyLow(rnd.Next(1, 10));
                         asteroids.RemoveAt(i);
                         bullets.RemoveAt(j);
-                        continue;
+                        
                     }
                 }
-                //Столкновение с кораблем
+
+                //Столкновение астероида с кораблем
                 if (ship.Collision(asteroids[i]))
                 {
                     ship.EnergyLow(20);
-                    System.Media.SystemSounds.Asterisk.Play();
+                    asteroids.RemoveAt(i);
                 }  
             }
 
             // Столкновение пули с аптечкой
-            if (kit != null && bullets.Count > 0)
+            if (kit.Count > 0)
             {
-                for (int i = 0; i < bullets.Count; i++)
+                for (int i = 0; i < kit.Count; i++)
                 {
-                    if (bullets[i].Collision(kit[i]))
+                    for (int j = 0; j < bullets.Count; j++)
                     {
-                        ship.EnergyAdd(20);
-                        bullets.RemoveAt(i);
-                        i--;
-                        kit = null;
+                        if (bullets[j].Collision(kit[i]))
+                        {
+                            ship.EnergyAdd(30);
+                            kit.RemoveAt(i);
+                            bullets.RemoveAt(j);
+                        }
                     }
                 }
             }
 
-            if (ship.Energy <= 0) ship?.Die();
+            // Здесь прокидываеться событие конца игры
+            if (ship.Energy < 0) 
+            {
+                ship.EventDie += Finish;
+            }
         }
 
         /// <summary>
@@ -376,11 +393,11 @@ namespace CS_2_HomeWork
         {
 
             timer.Stop();
-            Buffer.Graphics.DrawString("Это конец?", new Font(System.Drawing.FontFamily.GenericMonospace, 70, FontStyle.Underline), System.Drawing.Brushes.White, 200, 100);
+            Buffer.Graphics.DrawString("Конец игры", new Font(System.Drawing.FontFamily.GenericMonospace, 70, FontStyle.Underline), System.Drawing.Brushes.White, 200, 100);
             Buffer.Render();
+            System.Threading.Thread.Sleep(3000);
+            Application.Exit();
         }
-
-
     }
 }
 
