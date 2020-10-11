@@ -1,19 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Forms;
+using System.Windows.Media;
 using CS_2_HomeWork.Object;
 
 namespace CS_2_HomeWork
 {
+    /// <summary>
+    /// Делегат для логера
+    /// </summary>
+    /// <param name="msg"></param>
+    public delegate void ToLog(string msg);
+
+    /// <summary>
+    /// Делегат для пуль
+    /// </summary>
+    /// <returns></returns>
+    public delegate bool DelBull();
+
     class Game
     {
+        private static Timer timer = new Timer();
+        public static Random rnd = new Random();
 
         private static BufferedGraphicsContext _context;
         public static BufferedGraphics Buffer;
+
+        /// <summary>
+        /// Событие для логера
+        /// </summary>
+        public static event ToLog Write;
+
+        /// <summary>
+        /// Корабль
+        /// </summary>
+        private static Ship ship;
 
         /// <summary>
         /// Установка ширины игрового поля
@@ -36,14 +58,14 @@ namespace CS_2_HomeWork
         /// <summary>
         /// Установка высоты игрового поля
         /// </summary>
-        public static int Height 
+        public static int Height
         {
             get => height;
             set
             {
                 if (value > 1001 || value < 0) throw new ArgumentOutOfRangeException("Недопустимая высота игрового поля");
                 height = value;
-            } 
+            }
         }
 
         /// <summary>
@@ -56,6 +78,47 @@ namespace CS_2_HomeWork
         }
 
         /// <summary>
+        /// Обработчик нажатия клавиш
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void GameForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up) Game.IsShipUpKeyPress = true;
+            if (e.KeyCode == Keys.Down) Game.IsShipDownKeyPress = true;
+            if (e.KeyCode == Keys.Space) Game.IsShootKeyPress = true;
+        }
+
+        /// <summary>
+        /// Обработчик отпускания клавиш
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void GameForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up) Game.IsShipUpKeyPress = false;
+            if (e.KeyCode == Keys.Down) Game.IsShipDownKeyPress = false;
+            if (e.KeyCode == Keys.Space) Game.IsShootKeyPress = false;
+        }
+
+
+        /// <summary>
+        /// Флаг клавиши выстрела
+        /// </summary>
+        public static bool IsShootKeyPress { get; set; } = false;
+
+        /// <summary>
+        /// Флаг клавиши вверх
+        /// </summary>
+        public static bool IsShipUpKeyPress { get; set; } = false;
+
+        /// <summary>
+        /// Флаг клавиши вниз
+        /// </summary>
+        public static bool IsShipDownKeyPress { get; set; } = false;
+
+
+        /// <summary>
         /// Графическое устройство для вывода графики
         /// </summary>
         /// <param name="form"></param>
@@ -63,10 +126,14 @@ namespace CS_2_HomeWork
         {
             Graphics g;
 
-            // Предоставляет доступ к главному буферу гарфического контекста 
+            // Предоставляет доступ к главному буферу гарфического контекста
             // для текущего приложения
             _context = BufferedGraphicsManager.Current;
             g = form.CreateGraphics();
+
+            // Обработчики событий
+            form.KeyDown += GameForm_KeyDown;
+            form.KeyUp += GameForm_KeyUp;
 
             // Создание объекта, связывание его с формой
             // Сохранение размера формы
@@ -94,22 +161,68 @@ namespace CS_2_HomeWork
         private static List<Asteroid> asteroids;
 
         /// <summary>
+        /// Коллекция аптечек
+        /// </summary>
+        private static List<Kit> kit;
+
+        /// <summary>
         /// Объект пули
         /// </summary>
-        private static Bullet bullet;
+        public static List<Bullet> bullets;
+
+        /// <summary>
+        /// Фоновая музыка
+        /// </summary>
+        private static MediaPlayer foneM = new MediaPlayer
+        {
+        };
+
+        /// <summary>
+        /// Музыка проигрыша
+        /// </summary>
+        private static MediaPlayer loseM = new MediaPlayer
+        {
+        };
+
+        /// <summary>
+        /// Метод для воспроизведения фоновой музыки
+        /// </summary>
+        private static void PlayLoseMusic()
+        {
+            foneM.Open(new Uri(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../Resources/Sanctuary_Guardian.wav")));
+            foneM.Volume = 0.1;
+            foneM.Play();
+        }
+
+        /// <summary>
+        /// Метод для воспроизведения фоновой музыки
+        /// </summary>
+        private static void PlayFoneMusic()
+        {
+            foneM.Open(new Uri(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../Resources/PigStep.wav")));
+            foneM.Volume = 0.2;
+            foneM.Play();
+        }
 
         /// <summary>
         /// Метод создания объектов
         /// </summary>
         public static void Load()
         {
+            Write?.Invoke($"Начало игры");
+
             objs = new List<BaseObject>();
             asteroids = new List<Asteroid>();
+            kit = new List<Kit>();
+            bullets = new List<Bullet>();
             Random rnd = new Random();
 
             // Создание фонового рисунка
-            Bitmap img_background = new Bitmap("Resources/background.png"); // Да... это не красиво. Как сделать лучше?
-            objs.Add(new Planet(img_background, new Point(0,0), new Point(0), new Size(Width, Height)));
+            Bitmap img_background = new Bitmap("../../Resources/background.png"); // Да... это не красиво. Как сделать лучше?
+            objs.Add(new Planet(img_background, new Point(0, 0), new Point(0), new Size(Width, Height)));
+
+            // Старт фоновой музыки
+            PlayFoneMusic();
 
             // Создание звёзд
             for (int i = 1; i < 40; i++)    // Звезды побольше (ближние)
@@ -119,22 +232,33 @@ namespace CS_2_HomeWork
             for (int i = 1; i < 600; i++)   // Маленькие (дальние)
                 objs.Add(new Star(new Point(rnd.Next(1, Width), rnd.Next(1, Height)), new Point(1), new Size(1, 1)));
 
-            // Создание пуль
-            bullet = new Bullet(new Point(0, 200), new Point(5, 0), new Size(4, 1));
+            // Создание корабля
+            Bitmap img_ship = new Bitmap("../../Resources/bunny_ship.png");
+            ship = new Ship(img_ship, new Point(10, 400), new Point(10, 10), new Size(100, 100));
 
             // Создание астероидов
-            for(int i = 0; i < 30; i++)
+            Bitmap img_ast = new Bitmap("../../Resources/ceres.png");
+            for (int i = 0; i < 100; i++)
             {
-                int r = rnd.Next(5, 50);
-                asteroids.Add(new Asteroid(new Point(1000, rnd.Next(0, Game.Height)), new Point(r / 5), new Size(r, r)));
+                int r = rnd.Next(50, 80);
+                asteroids.Add(new Asteroid(img_ast, new Point((Game.Width + (i * rnd.Next(300,500))), rnd.Next(0, Game.Height)), new Point(5), new Size(r, r)));
             }
 
+            // Создание аптечек
+            Bitmap img_kit = new Bitmap("../../Resources/kit.png");
+            for (int i = 0; i < 50; i++)
+            {
+                kit.Add(new Kit(img_kit, new Point(Game.Width + (i * rnd.Next(800, 1000)), rnd.Next(10, (Game.Height - 10))), new Point(2), new Size(50, 50)));
+            }
+
+
             // Создание планет
-            Bitmap img_earth = new Bitmap("Resources/earth.png");
+            Bitmap img_earth = new Bitmap("../../Resources/earth.png");
             objs.Add(new Planet(img_earth, new Point(550, 500), new Point(0), new Size(800, 700)));
-            Bitmap img_saturn = new Bitmap("Resources/saturn.png");
-            objs.Add(new Planet(img_saturn, new Point(200, 150), new Point(70), new Size(70, -70)));
+            Bitmap img_saturn = new Bitmap("../../Resources/saturn.png");
+            objs.Add(new Planet(img_saturn, new Point(200, 150), new Point(0), new Size(70, 70)));
         }
+
 
         /// <summary>
         /// Отрисовка графики
@@ -142,7 +266,7 @@ namespace CS_2_HomeWork
         public static void Draw()
         {
             // Проверяем вывод графики
-            Buffer.Graphics.Clear(Color.Black);
+            Buffer.Graphics.Clear(System.Drawing.Color.Black);
 
             // Звезды и планеты
             foreach (BaseObject obj in objs)
@@ -153,7 +277,19 @@ namespace CS_2_HomeWork
                 ast.Draw();
 
             // Пули
-            bullet.Draw();
+            foreach (Bullet bul in bullets)
+                bul.Draw();
+
+            // Корабль
+            ship?.Draw();
+
+            //Аптечки
+            foreach (Kit k in kit)
+                k.Draw();
+
+            // Энергия корабля
+            if (ship != null)
+                Buffer.Graphics.DrawString("Energy:" + ship.Energy, SystemFonts.DefaultFont, System.Drawing.Brushes.White, 0, 0);
 
             Buffer.Render();
         }
@@ -163,6 +299,10 @@ namespace CS_2_HomeWork
         /// </summary>
         public static void Update()
         {
+            // Энергия корабля
+            if (ship.Energy > 0) Buffer.Graphics.DrawString("Energy:" + ship.Energy, SystemFonts.DefaultFont, System.Drawing.Brushes.White, 0, 0);
+            else Buffer.Graphics.Clear(System.Drawing.Color.Black);
+
             // Звезды и планеты
             foreach (BaseObject obj in objs)
                 obj.Update();
@@ -170,6 +310,69 @@ namespace CS_2_HomeWork
             // Астероиды
             foreach (Asteroid ast in asteroids)
                 ast.Update();
+
+            // Пули
+            foreach (Bullet bul in bullets)
+                bul.Update();
+
+            // Аптечки
+            foreach (Kit k in kit)
+                k.Update();
+
+            // Удаление пуль вылетевших за пределы поля
+            for(int i = 0; i < bullets.Count; i++)
+            {
+                if (bullets[i].DelBull()) bullets.RemoveAt(i);
+            }
+
+            // Корабль
+            ship.Update();
+
+            Random rnd = new Random();
+            // Ох, господь... что же это
+            for (var i = 0; i < asteroids.Count; i++)
+            {
+                // Столкновение пули с астероидом
+                for (int j = 0; j < bullets.Count; j++)
+                {
+                    if (bullets[j].Collision(asteroids[i]))
+                    {
+                        asteroids.RemoveAt(i);
+                        bullets.RemoveAt(j);
+                        
+                    }
+                }
+
+                //Столкновение астероида с кораблем
+                if (ship.Collision(asteroids[i]))
+                {
+                    ship.EnergyLow(20);
+                    asteroids.RemoveAt(i);
+                }  
+            }
+
+            // Столкновение пули с аптечкой
+            if (kit.Count > 0)
+            {
+                for (int i = 0; i < kit.Count; i++)
+                {
+                    for (int j = 0; j < bullets.Count; j++)
+                    {
+                        if (bullets[j].Collision(kit[i]))
+                        {
+                            ship.EnergyAdd(30);
+                            kit.RemoveAt(i);
+                            bullets.RemoveAt(j);
+                        }
+                    }
+                }
+            }
+
+            // Здесь прокидываеться событие конца игры
+            if (ship.Energy < 0) 
+            {
+                ship.EventDie += Finish;
+            }
         }
 
         /// <summary>
@@ -177,10 +380,23 @@ namespace CS_2_HomeWork
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void Timer_Tick(object sender, EventArgs e) // Видимо какое то событие
+        private static void Timer_Tick(object sender, EventArgs e)
         {
             Draw();
             Update();
+        }
+
+        /// <summary>
+        /// Конец игры
+        /// </summary>
+        public static void Finish()
+        {
+
+            timer.Stop();
+            Buffer.Graphics.DrawString("Конец игры", new Font(System.Drawing.FontFamily.GenericMonospace, 70, FontStyle.Underline), System.Drawing.Brushes.White, 200, 100);
+            Buffer.Render();
+            System.Threading.Thread.Sleep(3000);
+            Application.Exit();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace CS_2_HomeWork
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Start()
         {
             Form form = new Form();
             Game.Width = 1000;
@@ -18,6 +18,11 @@ namespace CS_2_HomeWork
             Game.Init(form);
             Game.Draw();
             Application.Run(form);
+        }
+
+        static void Main(string[] args)
+        {
+            Start();
         }
     }
 }

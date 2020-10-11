@@ -18,7 +18,9 @@ namespace CS_2_HomeWork.Object
         /// <param name="pos"></param>
         /// <param name="dir"></param>
         /// <param name="size"></param>
-        public Bullet(Point pos, Point dir, Size size) : base(pos, dir, size) { }
+        public Bullet(Point pos, Point dir, Size size) : base(pos, dir, size) 
+        {
+        }
 
         /// <summary>
         /// Отрисовка пули
@@ -33,7 +35,17 @@ namespace CS_2_HomeWork.Object
         /// </summary>
         public override void Update()
         {
-            Pos.X = Pos.X + 3;
+            Pos.X += Dir.X;
+        }
+
+        /// <summary>
+        /// Метод возвращает true если пуля вышла за пределы игрового поля
+        /// </summary>
+        /// <returns></returns>
+        public bool DelBull()
+        {
+            if (Pos.X > Game.Width) return true;
+            return false;
         }
     }
 }
