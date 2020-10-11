@@ -161,6 +161,11 @@ namespace CS_2_HomeWork
         private static List<Asteroid> asteroids;
 
         /// <summary>
+        /// Максимальное кол-во астероидов
+        /// </summary>
+        public static int MaxAsteroids { get; set; } = 8;
+
+        /// <summary>
         /// Коллекция аптечек
         /// </summary>
         private static List<Kit> kit;
@@ -205,6 +210,20 @@ namespace CS_2_HomeWork
         }
 
         /// <summary>
+        /// Создание астероидов
+        /// </summary>
+        public static void AsterCrt()
+        {
+            asteroids = new List<Asteroid>(MaxAsteroids);
+            Bitmap img_ast = new Bitmap("../../Resources/ceres.png");
+            for (int i = 0; i < MaxAsteroids; i++)
+            {
+                int r = rnd.Next(50, 80);
+                asteroids.Add(new Asteroid(img_ast, new Point((Game.Width + rnd.Next(700)), rnd.Next(81, Game.Height)), new Point(5), new Size(r, r)));
+            }
+        }
+
+        /// <summary>
         /// Метод создания объектов
         /// </summary>
         public static void Load()
@@ -212,7 +231,6 @@ namespace CS_2_HomeWork
             Write?.Invoke($"Начало игры");
 
             objs = new List<BaseObject>();
-            asteroids = new List<Asteroid>();
             kit = new List<Kit>();
             bullets = new List<Bullet>();
             Random rnd = new Random();
@@ -237,12 +255,7 @@ namespace CS_2_HomeWork
             ship = new Ship(img_ship, new Point(10, 400), new Point(10, 10), new Size(100, 100));
 
             // Создание астероидов
-            Bitmap img_ast = new Bitmap("../../Resources/ceres.png");
-            for (int i = 0; i < 100; i++)
-            {
-                int r = rnd.Next(50, 80);
-                asteroids.Add(new Asteroid(img_ast, new Point((Game.Width + (i * rnd.Next(300,500))), rnd.Next(0, Game.Height)), new Point(5), new Size(r, r)));
-            }
+            AsterCrt();
 
             // Создание аптечек
             Bitmap img_kit = new Bitmap("../../Resources/kit.png");
@@ -307,6 +320,13 @@ namespace CS_2_HomeWork
             foreach (BaseObject obj in objs)
                 obj.Update();
 
+            // Увелечение коллекции астероидов
+            if (asteroids.Count == 0)
+            {
+                MaxAsteroids++;
+                AsterCrt();
+            }
+
             // Астероиды
             foreach (Asteroid ast in asteroids)
                 ast.Update();
@@ -319,36 +339,42 @@ namespace CS_2_HomeWork
             foreach (Kit k in kit)
                 k.Update();
 
-            // Удаление пуль вылетевших за пределы поля
-            for(int i = 0; i < bullets.Count; i++)
-            {
-                if (bullets[i].DelBull()) bullets.RemoveAt(i);
-            }
-
             // Корабль
             ship.Update();
 
             Random rnd = new Random();
             // Ох, господь... что же это
-            for (var i = 0; i < asteroids.Count; i++)
+            for (int j = 0; j < bullets.Count; j++)
             {
                 // Столкновение пули с астероидом
-                for (int j = 0; j < bullets.Count; j++)
+                for (var i = 0; i < asteroids.Count; i++)
                 {
                     if (bullets[j].Collision(asteroids[i]))
                     {
                         asteroids.RemoveAt(i);
                         bullets.RemoveAt(j);
-                        
+                        ship.EnergyAdd(5);
                     }
                 }
+                // Удаление пуль вылетевших за пределы поля
+                if (bullets[j].DelBull()) bullets.RemoveAt(j);
+            }
 
-                //Столкновение астероида с кораблем
+            // Столкновение астероида с кораблем
+            for(var i = 0; i < asteroids.Count; i++)
+            {
                 if (ship.Collision(asteroids[i]))
                 {
                     ship.EnergyLow(20);
                     asteroids.RemoveAt(i);
-                }  
+                }
+
+                // Удаление астероидов вылетевших за пределы поля
+                if (asteroids[i].DelAst())
+                { 
+                    asteroids.RemoveAt(i);
+                    ship.EnergyLow(20);
+                }
             }
 
             // Столкновение пули с аптечкой
@@ -360,7 +386,7 @@ namespace CS_2_HomeWork
                     {
                         if (bullets[j].Collision(kit[i]))
                         {
-                            ship.EnergyAdd(30);
+                            ship.EnergyAdd(50);
                             kit.RemoveAt(i);
                             bullets.RemoveAt(j);
                         }
