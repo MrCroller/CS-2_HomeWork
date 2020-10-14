@@ -1,0 +1,94 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:List"
+        xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+        xmlns:winForms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:Specialized="clr-namespace:System.Collections.Specialized;assembly=System" x:Class="List.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid x:Name="MainGrid">
+        <TextBox x:Name="P_TextBox" HorizontalAlignment="Left"  
+                 Margin="168,30,0,0" TextWrapping="Wrap"
+                 VerticalAlignment="Top" 
+                 Width="120" Background="#FFCCF6FF"/>
+        <TextBlock HorizontalAlignment="Left" 
+                   Height="15" Margin="168,10,0,0" 
+                   TextWrapping="Wrap" 
+                   VerticalAlignment="Top" 
+                   Width="158">
+            <Run Text="Сотрудник :"/>
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" 
+                   Height="15" Margin="611,14,0,0" 
+                   TextWrapping="Wrap" 
+                   Text="Список сотрудников:" 
+                   VerticalAlignment="Top" 
+                   Width="126"/>
+        <ListBox x:Name="SpisOk_DP" Margin="437,34,229,10"
+                 ItemsSource="{Binding Dep,
+            UpdateSourceTrigger=PropertyChanged}" MouseDoubleClick="SpisOk_DP_MouseDoubleClick">
+            <ListBox.Background>
+
+                <LinearGradientBrush EndPoint="0,-1" StartPoint="1,1">
+                    <GradientStop Color="#FFBDF9FF" Offset="1"/>
+                    <GradientStop Color="#FFEAFFE8"/>
+                </LinearGradientBrush>
+            </ListBox.Background>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <MediaElement x:Name="big_chungus" 
+                      HorizontalAlignment="Left" 
+                      Height="234" VerticalAlignment="Top" Width="427" 
+                      Margin="10,163,0,0" 
+                      Source="Resources/tenor.gif" UnloadedBehavior="Manual" MediaEnded="big_chungus_MediaEnded" LoadedBehavior="Manual"/>
+        <TextBlock HorizontalAlignment="Left" 
+                   Height="15" Margin="10,10,0,0" 
+                   TextWrapping="Wrap" 
+                   VerticalAlignment="Top" Width="158">
+            <Run Text="Организация :"/>
+        </TextBlock>
+        <TextBox x:Name="DP_TextBox" HorizontalAlignment="Left"  
+                      Margin="10,30,0,0" TextWrapping="Wrap"
+                      VerticalAlignment="Top" 
+                      Width="120" Background="#FFCCF6FF"/>
+        <Button Content="Внести" 
+                HorizontalAlignment="Left" 
+                Margin="168,53,0,0" 
+                VerticalAlignment="Top" 
+                Width="76" 
+                Click="Button_Click" 
+                Height="27"/>
+        <TextBlock HorizontalAlignment="Left" 
+                   Height="15" 
+                   Margin="437,14.05,0,0" 
+                   TextWrapping="Wrap" 
+                   Text="Список организаций:" 
+                   VerticalAlignment="Top" 
+                   Width="126"/>
+        <ListBox x:Name="SpisOk_P" Margin="611,34,10,10">
+            <ListBox.Background>
+                <LinearGradientBrush EndPoint="0,-1" StartPoint="1,1">
+                    <GradientStop Color="#FFBDF9FF" Offset="1"/>
+                    <GradientStop Color="#FFEAFFE8"/>
+                </LinearGradientBrush>
+            </ListBox.Background>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button x:Name="CreateDep" 
+                Content="Создать" 
+                HorizontalAlignment="Left" 
+                Margin="10,53,0,0" 
+                VerticalAlignment="Top" Width="75" Height="27" Click="CreateDep_Click"/>
+    </Grid>
+</Window>
