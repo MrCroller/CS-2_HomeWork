@@ -9,17 +9,23 @@ namespace List
 {
     class ListDP
     {
-        public ObservableCollection<Departament> Dep { get; set; }
+        public ObservableCollection<People> Dep { get; set; }
 
-        public ListDP() => Dep = new ObservableCollection<Departament>()
+        public ListDP() => Dep = new ObservableCollection<People>()
             {
-                new Departament(){Name = "Компания Гачи"},
-                new Departament(){Name = "ООО Буравчик"}
+                new People(){Departament = "Компания Гачи", Name = "Билли Хэрингтон" },
+                new People(){Departament = "ООО Буравчик"}
             };
 
-        public void Create(string s)
+        public void DCreate(string s)
         {
-            Dep.Add(new Departament() { Name = s });
+            Dep.Add(new People() { Departament = s });
+
+        }
+
+        public void PAdd(string s)
+        {
+            Dep.Add(new People() { Name = s });
 
         }
     }

@@ -8,15 +8,11 @@ using System.Threading.Tasks;
 
 namespace List
 {
-    class Departament
+    class People
     {
         public string Name { get; set; }
 
-        public List<string> People { get; set; }
+        public string Departament { get; set; }
 
-        public void P_Add(string s)
-        {
-            People.Add(s);
-        }
     }
 }

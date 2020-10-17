@@ -23,13 +23,13 @@ namespace List
     /// </summary>
     public partial class MainWindow : Window
     {
-        ListDP Departament;
+        ListDP Dep;
         public MainWindow()
         {
             InitializeComponent();
             big_chungus.Play();
-            Departament = new ListDP();
-            MainGrid.DataContext = Departament;
+            Dep = new ListDP();
+            MainGrid.DataContext = Dep;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -46,7 +46,7 @@ namespace List
 
         private void CreateDep_Click(object sender, RoutedEventArgs e)
         {
-            Departament.Create(DP_TextBox.Text);
+            Dep.DCreate(DP_TextBox.Text);
 
             DP_TextBox.Clear();
         }
@@ -58,8 +58,13 @@ namespace List
 
         private void SpisOk_DP_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            Departament = SpisOk_DP.SelectedItem as ListDP;
+            Dep = SpisOk_DP.SelectedItem as ListDP;
             //var frm = new WindowEdt(this);
+        }
+
+        private void SpisOk_P_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }

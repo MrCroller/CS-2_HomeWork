@@ -39,7 +39,7 @@
             </ListBox.Background>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}"/>
+                    <TextBlock Text="{Binding Departament}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
@@ -72,7 +72,9 @@
                    Text="Список организаций:" 
                    VerticalAlignment="Top" 
                    Width="126"/>
-        <ListBox x:Name="SpisOk_P" Margin="611,34,10,10">
+        <ListBox x:Name="SpisOk_P" Margin="611,34,10,10"
+                 ItemsSource="{Binding Dep,
+            UpdateSourceTrigger=PropertyChanged}" MouseDoubleClick="SpisOk_P_MouseDoubleClick">
             <ListBox.Background>
                 <LinearGradientBrush EndPoint="0,-1" StartPoint="1,1">
                     <GradientStop Color="#FFBDF9FF" Offset="1"/>
@@ -81,7 +83,7 @@
             </ListBox.Background>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding}"/>
+                    <TextBlock Text="{Binding Name}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
