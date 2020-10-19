@@ -8,8 +8,15 @@
         Title="Edit" Height="130" Width="400">
     <Grid>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="108,10,0,0" Height="31" Width="159" FontSize="20" FontFamily="Microsoft JhengHei UI"><Run Text="Переименовать:"/></TextBlock>
-        <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="214" Margin="65,46,0,0"/>
-        <Button Content="Жмяк" HorizontalAlignment="Left" Height="23" Margin="284,46,0,0" VerticalAlignment="Top" Width="39" FontFamily="Microsoft JhengHei UI" FontWeight="Bold" Click="Button_Click"/>
+        <TextBox x:Name="RenameBlock" 
+                 Text="{Binding Edit, Mode=OneWay}"
+                 HorizontalAlignment="Left" Height="23" 
+                 VerticalAlignment="Top" 
+                 Width="214" Margin="65,46,0,0"/>
+        <Button Content="Жмяк" 
+                HorizontalAlignment="Left" Height="23" 
+                Margin="284,46,0,0" VerticalAlignment="Top" Width="39" 
+                FontFamily="Microsoft JhengHei UI" FontWeight="Bold" Click="Button_Click"/>
 
     </Grid>
 </Window>

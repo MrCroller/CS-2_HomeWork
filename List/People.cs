@@ -12,7 +12,7 @@ namespace List
     {
         public string Name { get; set; }
 
-        public string Departament { get; set; }
+        public string Departament { get; set; } = "No Departament";
 
     }
 }

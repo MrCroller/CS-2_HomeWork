@@ -24,14 +24,13 @@ namespace List
     /// </summary>
     public partial class MainWindow : Window
     {
-        public People Select { get; set; }
-        ObservableCollection<People> Cl;
-        ObservableCollection<string> Dep;
-        ObservableCollection<string> Ppl;
+        public ObservableCollection<People> Cl;
+        public string Select { get; set; }
+        private bool flagSelect { get; set; }
+        public string Edit { get; set; }
 
         public MainWindow()
         {
-            Select = new People();
             InitializeComponent();
             big_chungus.Play();
             Cl = new ObservableCollection<People>
@@ -41,15 +40,22 @@ namespace List
                 new People(){Departament = "Компания Гачи", Name = "Вкусный дед" },
                 new People(){Departament = "ООО Буравчик", Name = "Маслёнок 007"},
                 new People(){Departament = "ООО Безбаб"}
+
             };
             #endregion
-            Update();
+            //SpisOk_DP.ItemsSource = Cl.Distinct(i => i.Departament);
+            UpdateD();
         }
 
-        private void Update()
+        /// <summary>
+        /// Создание string списка организаций на основе имющихся
+        /// </summary>
+        private void UpdateD()
         {
-
-            SpisOk_DP.ItemsSource = Cl;
+            // Оснавная суть данного костыля убрать дубликаты
+            var selected = from i in Cl
+                                select i.Departament;
+            SpisOk_DP.ItemsSource = selected.Distinct();
         }
 
         private void Create_Click(object sender, RoutedEventArgs e)
@@ -64,25 +70,11 @@ namespace List
             }
             else
             {
-                MessageBox.Show("Название введено некорректно");
+                MessageBox.Show("данные введены некорректно");
             }
             DP_TextBox.Clear();
             P_TextBox.Clear();
-        }
-
-        private void lbEmployee_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        /// <summary>
-        /// Метод для воспроизведения гифок
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void big_chungus_MediaEnded(object sender, RoutedEventArgs e)
-        {
-            big_chungus.Position = TimeSpan.FromMilliseconds(1);
+            UpdateD();
         }
 
         /// <summary>
@@ -92,18 +84,56 @@ namespace List
         /// <param name="e"></param>
         private void SpisOk_DP_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var Select = SpisOk_DP.SelectedItem as People;
+            flagSelect = true; // А этот костыль для переименования Департамента или Имени человека
+            Select = SpisOk_DP.SelectedItem as string;
+
             var list = from t in Cl
-                       where t.Departament == Select.Departament
-                       orderby t
+                       where t.Departament == Select
                        select t.Name;
 
-            MainGrid.DataContext = list;
+            SpisOk_P.ItemsSource = list;
+
+            // Rename.Visibility = Visibility.Visible;
         }
 
         private void SpisOk_P_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            flagSelect = false;
+            Select = SpisOk_P.SelectedItem as string;
+        }
 
+        private void Rename_Click(object sender, RoutedEventArgs e)
+        {
+            var frm = new Edit(this);
+            frm.ShowDialog();
+
+            foreach (People P in Cl)
+            {
+                if (flagSelect)
+                {
+                    if (P.Departament == Select) P.Departament = Edit;
+                }
+                else
+                {
+                    if (P.Name == Select) P.Name = Edit;
+                }
+            }
+        }
+
+        private void lbEmployee_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+
+        /// <summary>
+        /// Метод для воспроизведения гифок
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void big_chungus_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            big_chungus.Position = TimeSpan.FromMilliseconds(1);
         }
     }
 }

@@ -19,14 +19,19 @@ namespace List
     /// </summary>
     public partial class Edit : Window
     {
-        public Edit()
+        public string Selected { get; set; }
+
+        public Edit(MainWindow w)
         {
             InitializeComponent();
+            w.Edit = w.Select;
+            RenameBlock.DataContext = w.Edit;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            //MainWindow.Rename.Visibility = Visibility.Visible;
+            this.Close();
         }
     }
 }
