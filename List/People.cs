@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace List
 {
-    class People
+    public class People
     {
         public string Name { get; set; }
 

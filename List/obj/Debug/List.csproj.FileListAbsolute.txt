@@ -16,3 +16,5 @@ E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_Hom
 E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\List\bin\Debug\Resources\tenor.gif
 E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\List\bin\Debug\System.Collections.Immutable.dll
 E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\List\obj\Debug\List.csproj.CopyComplete
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\List\obj\Debug\Edit.g.cs
+E:\Курс\C#\Продвинутый\Сентябрь 2 уровень\CS-2_HomeWork\List\obj\Debug\Edit.baml

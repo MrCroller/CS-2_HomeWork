@@ -31,10 +31,9 @@
                  ItemsSource="{Binding Dep,
             UpdateSourceTrigger=PropertyChanged}" MouseDoubleClick="SpisOk_DP_MouseDoubleClick">
             <ListBox.Background>
-
                 <LinearGradientBrush EndPoint="0,-1" StartPoint="1,1">
                     <GradientStop Color="#FFBDF9FF" Offset="1"/>
-                    <GradientStop Color="#FFEAFFE8"/>
+                    <GradientStop Color="#FFEAFFE8" Offset="0.004"/>
                 </LinearGradientBrush>
             </ListBox.Background>
             <ListBox.ItemTemplate>
@@ -43,10 +42,24 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <ListBox x:Name="SpisOk_P" Margin="611,34,28,10"
+            ItemsSource="{Binding list, UpdateSourceTrigger=PropertyChanged}" MouseDoubleClick="SpisOk_P_MouseDoubleClick">
+            <ListBox.Background>
+                <LinearGradientBrush EndPoint="0,-1" StartPoint="1,1">
+                    <GradientStop Color="#FFBDF9FF" Offset="1"/>
+                    <GradientStop Color="#FFEAFFE8" Offset="0.004"/>
+                </LinearGradientBrush>
+            </ListBox.Background>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <MediaElement x:Name="big_chungus" 
                       HorizontalAlignment="Left" 
                       Height="234" VerticalAlignment="Top" Width="427" 
-                      Margin="10,163,0,0" 
+                      Margin="10,175,0,0" 
                       Source="Resources/tenor.gif" UnloadedBehavior="Manual" MediaEnded="big_chungus_MediaEnded" LoadedBehavior="Manual"/>
         <TextBlock HorizontalAlignment="Left" 
                    Height="15" Margin="10,10,0,0" 
@@ -58,13 +71,6 @@
                       Margin="10,30,0,0" TextWrapping="Wrap"
                       VerticalAlignment="Top" 
                       Width="120" Background="#FFCCF6FF"/>
-        <Button Content="Внести" 
-                HorizontalAlignment="Left" 
-                Margin="168,53,0,0" 
-                VerticalAlignment="Top" 
-                Width="76" 
-                Click="Button_Click" 
-                Height="27"/>
         <TextBlock HorizontalAlignment="Left" 
                    Height="15" 
                    Margin="437,14.05,0,0" 
@@ -72,25 +78,10 @@
                    Text="Список организаций:" 
                    VerticalAlignment="Top" 
                    Width="126"/>
-        <ListBox x:Name="SpisOk_P" Margin="611,34,10,10"
-                 ItemsSource="{Binding Dep,
-            UpdateSourceTrigger=PropertyChanged}" MouseDoubleClick="SpisOk_P_MouseDoubleClick">
-            <ListBox.Background>
-                <LinearGradientBrush EndPoint="0,-1" StartPoint="1,1">
-                    <GradientStop Color="#FFBDF9FF" Offset="1"/>
-                    <GradientStop Color="#FFEAFFE8"/>
-                </LinearGradientBrush>
-            </ListBox.Background>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Name}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <Button x:Name="CreateDep" 
+        <Button x:Name="Create" 
                 Content="Создать" 
-                HorizontalAlignment="Left" 
+                HorizontalAlignment="Left"  
                 Margin="10,53,0,0" 
-                VerticalAlignment="Top" Width="75" Height="27" Click="CreateDep_Click"/>
+                VerticalAlignment="Top" Width="75" Height="27" Click="Create_Click"/>
     </Grid>
 </Window>
